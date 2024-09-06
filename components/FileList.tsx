@@ -2,10 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-
-// interface FileWithProgress extends File {
-//   progress: number;
-// }
+import { formatFileSize } from "@/lib/utils";
 
 interface FileListProps {
   files: File[];
@@ -13,13 +10,12 @@ interface FileListProps {
 }
 
 const FileList: React.FC<FileListProps> = ({ files, onFileRemove }) => {
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
+  const [progress, setProgress] = React.useState(13);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setProgress(66), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="mt-8 mx-auto">
@@ -44,7 +40,7 @@ const FileList: React.FC<FileListProps> = ({ files, onFileRemove }) => {
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-              <Progress value={0} className="w-full" />
+              <Progress value={progress} className="w-[60%]" />
             </li>
           ))}
         </ul>

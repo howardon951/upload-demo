@@ -1,4 +1,4 @@
-/* @tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -80,11 +80,7 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-} */
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+}
 
 * {
   margin: 0;
