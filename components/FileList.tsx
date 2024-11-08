@@ -1,12 +1,13 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, Download } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { formatFileSize } from "@/lib/utils";
+import { FileWithId } from "@/hooks/useUpload";
 
 interface FileListProps {
-  files: File[];
-  onFileRemove: (file: File) => void;
+  files: FileWithId[];
+  onFileRemove: (file: FileWithId) => void;
 }
 
 const FileList: React.FC<FileListProps> = ({ files, onFileRemove }) => {
@@ -16,6 +17,25 @@ const FileList: React.FC<FileListProps> = ({ files, onFileRemove }) => {
     const timer = setTimeout(() => setProgress(66), 500);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleDownload = async (file: FileWithId) => {
+    try {
+      const response = await fetch(`/api/download/${file._id}`);
+      if (!response.ok) throw new Error("Download failed");
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = file.name;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Download error:", error);
+    }
+  };
 
   return (
     <div className="mt-8 mx-auto">
@@ -31,6 +51,14 @@ const FileList: React.FC<FileListProps> = ({ files, onFileRemove }) => {
                 <span className="text-sm text-gray-500 mr-4">
                   {formatFileSize(file.size)}
                 </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleDownload(file)}
+                  className="text-gray-500 hover:text-blue-500 mr-2"
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon"

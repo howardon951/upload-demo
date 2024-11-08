@@ -5,7 +5,7 @@ import { MAX_FILE_SIZE } from "@/lib/constants";
 import { isAllowedFileType } from "@/lib/utils";
 
 interface FileUploadProps {
-  onAddFiles: (files: File[]) => void;
+  onAddFiles: (files: File[]) => Promise<void>;
   setError: (error: string | null) => void;
 }
 
